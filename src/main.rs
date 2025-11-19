@@ -1,8 +1,13 @@
+#[cfg(debug_assertions)]
+use std::time::Instant;
 use std::{thread, time::Duration};
 
 use scanf::scanf;
 
-fn main() -> Result<(), u64> {
+const SECRET: &[u8] = b"clubeh";
+const SLEEPMS: u64 = 67;
+
+fn main() -> Result<(), i32> {
     print!("Password: ");
     let input = match get_input() {
         Some(x) => x,
@@ -10,10 +15,24 @@ fn main() -> Result<(), u64> {
             return Ok(());
         }
     };
-    let flag = check_pw(input);
-    match flag {
-        true => Ok(()),
-        false => Err(1),
+
+    let flag: bool;
+    #[cfg(not(debug_assertions))]
+    {
+        flag = check_pw(input);
+    }
+    #[cfg(debug_assertions)]
+    {
+        let now = Instant::now();
+        flag = check_pw(input);
+        println!("{:#?}", now.elapsed());
+    }
+
+    if flag {
+        win();
+        Ok(())
+    } else {
+        Err(1)
     }
 }
 
@@ -26,9 +45,6 @@ fn get_input() -> Option<String> {
 }
 
 fn check_pw(s: String) -> bool {
-    const SECRET: &[u8] = b"club";
-    const SLEEPMS: u64 = 100;
-
     if s.len() != SECRET.len() {
         return false;
     }
@@ -42,4 +58,8 @@ fn check_pw(s: String) -> bool {
     }
 
     true
+}
+
+fn win() {
+    println!("You win!");
 }
