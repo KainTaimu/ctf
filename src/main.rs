@@ -1,38 +1,40 @@
+use scanf::scanf;
 #[cfg(debug_assertions)]
 use std::time::Instant;
 use std::{thread, time::Duration};
 
-use scanf::scanf;
-
-const SECRET: &[u8] = b"clubeh";
-const SLEEPMS: u64 = 67;
+const SECRET: &[u8] = b"clubeh{D0N7_B3_4_5QU4R3_7HZFH6H9}";
+const SLEEPMS: u64 = 100;
 
 fn main() -> Result<(), i32> {
-    print!("Password: ");
-    let input = match get_input() {
-        Some(x) => x,
-        None => {
-            return Ok(());
+    loop {
+        print!("Password: ");
+        let input = match get_input() {
+            Some(x) => x,
+            None => {
+                return Ok(());
+            }
+        };
+
+        let flag: bool;
+        #[cfg(not(debug_assertions))]
+        {
+            flag = check_pw(input);
         }
-    };
+        #[cfg(debug_assertions)]
+        {
+            let now = Instant::now();
+            flag = check_pw(input);
+            println!("{:#?}", now.elapsed());
+        }
 
-    let flag: bool;
-    #[cfg(not(debug_assertions))]
-    {
-        flag = check_pw(input);
-    }
-    #[cfg(debug_assertions)]
-    {
-        let now = Instant::now();
-        flag = check_pw(input);
-        println!("{:#?}", now.elapsed());
-    }
-
-    if flag {
-        win();
-        Ok(())
-    } else {
-        Err(1)
+        if flag {
+            win();
+            return Ok(());
+        } else {
+            println!("Try again.");
+            continue;
+        }
     }
 }
 
