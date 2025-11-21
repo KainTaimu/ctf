@@ -3,8 +3,8 @@ use scanf::scanf;
 use std::time::Instant;
 use std::{thread, time::Duration};
 
-const SECRET: &[u8] = b"clubeh{D0N7_B3_4_5QU4R3_7HZFH6H9}";
-const SLEEPMS: u64 = 100;
+const SECRET: &[u8] = b"clubeh{71M1NG_4774CK}";
+const SLEEPMS: u64 = 10;
 
 fn main() -> Result<(), i32> {
     loop {
