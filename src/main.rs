@@ -6,7 +6,7 @@ use std::{thread, time::Duration};
 
 mod constants;
 
-const SLEEPMS: u64 = 15;
+const SLEEPMS: u64 = 8;
 
 fn main() -> Result<(), i32> {
     loop {
