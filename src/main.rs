@@ -9,6 +9,8 @@ mod constants;
 const SLEEPMS: u64 = 8;
 
 fn main() -> Result<(), i32> {
+    #[cfg(debug_assertions)]
+    println!("Secret len: {}", SECRETL.len());
     loop {
         print!("Password: ");
         let input = match get_input() {
