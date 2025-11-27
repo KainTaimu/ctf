@@ -1,10 +1,12 @@
+use crate::constants::SECRETL;
 use scanf::scanf;
 #[cfg(debug_assertions)]
 use std::time::Instant;
 use std::{thread, time::Duration};
 
-const SECRET: &[u8] = b"clubeh{71M1NG_4774CK}";
-const SLEEPMS: u64 = 10;
+mod constants;
+
+const SLEEPMS: u64 = 15;
 
 fn main() -> Result<(), i32> {
     loop {
@@ -47,12 +49,18 @@ fn get_input() -> Option<String> {
 }
 
 fn check_pw(s: String) -> bool {
-    if s.len() != SECRET.len() {
+    if s.len() != SECRETL.len() {
         return false;
     }
 
+    let mut hasher = blake3::Hasher::new();
     for (i, c) in s.into_bytes().iter().enumerate() {
-        if *c != SECRET[i] {
+        let hash = hasher.update(&[*c]).finalize();
+
+        #[cfg(debug_assertions)]
+        println!("{:?} {:?}, {:#?}", c, hash, hasher.count());
+
+        if hash.to_hex().as_bytes() != SECRETL[i] {
             thread::sleep(Duration::from_millis(SLEEPMS));
             return false;
         }
