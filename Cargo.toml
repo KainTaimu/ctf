@@ -6,3 +6,8 @@ edition = "2024"
 [dependencies]
 blake3 = "1.8.2"
 scanf = "2.0.0"
+
+[profile.release]
+opt-level = "s"
+strip = true
+
