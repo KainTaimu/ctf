@@ -1,1 +1,1 @@
-My buddy said he created the PERFECT cryptographic algorithm with ChatGPT. It even claims that it would take a quantum computer log(N^120) attempts to brute-force a 21-character password! Can you prove him wrong?
+My buddy said he vibe-coded the PERFECT cryptographic algorithm with ChatGPT. It even claims that it would take a quantum computer log(N^120) attempts to brute-force a 21-character password! Can you prove him wrong?

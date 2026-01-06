@@ -2,17 +2,16 @@
 ```bash
 git clone https://github.com/KainTaimu/ctf.git
 cd ctf
-echo clubeh{FLAG} > flag.txt
+echo clubeh{FLAG} > flag.txt # Create flag file
 
-pip install blake3
+pip install blake3 # Install prerequisite
 python hash_gen.py # Create the hashed secret
 
-cargo build --release --default-features
-./target/release/timing_attack
+cargo build --release # Build
+./target/release/timing_attack # Run
 ```
 
 # Running solution
 ```bash
-pip install blake3
 python ./poc/poc.py
 ```

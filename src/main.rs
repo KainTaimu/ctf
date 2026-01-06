@@ -6,7 +6,7 @@ use std::{thread, time::Duration};
 
 mod constants;
 
-const SLEEPMS: u64 = 8;
+const SLEEPMS: u64 = 10;
 
 fn main() -> Result<(), i32> {
     #[cfg(debug_assertions)]
@@ -63,7 +63,7 @@ fn check_pw(s: String) -> bool {
         println!("{:?} {:?}, {:#?}", c, hash, hasher.count());
 
         if hash.to_hex().as_bytes() != SECRETL[i] {
-            thread::sleep(Duration::from_millis(SLEEPMS));
+            thread::sleep(Duration::from_millis(SLEEPMS / 2));
             return false;
         }
         thread::sleep(Duration::from_millis(SLEEPMS));
